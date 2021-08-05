@@ -1,0 +1,136 @@
+@charset "UTF-8";
+	body{ width:1500px; overflow:auto; }
+	.bottom{ width:1500px; color:rgb(115,115,115); font-size:12px; text-align:center; border-top: 1px solid #e1e1e1;}
+	.top{ width:1500px; height:72px; border-bottom:1px solid #e1e1e1;}
+	.home{ width:1500px; margin-left:-140px; height:auto; overflow:hidden;}
+	-ms-input-placeholder { color:#00c7ae; }
+	-webkit-input-placeholder {color:#00c7ae; }
+	-moz-placeholder { color:#00c7ae; }
+	.middleTop{ width:1500px; height:550px; margin:260px 0px 0px 440px; }
+	.middleLeft{ width:440px; height:600px; float: left; }
+	.middleSearch{ width:440px; height: 200px;}
+	.middleCategory{ width:440px; height:300px; margin: 30px 0px 0px 40px;}
+	.categoryIcon{ width: 90px; height:90px; float:left; margin: 0px 10px 0px 10px; }
+	.categoryIcon:hover{ cursor: pointer; }
+	.categoryImage{ widht: 90px; height:70px; margin: 0px 0px -20px 31px; }
+	.categoryImage:hover{ transform: rotate( 25deg ); transition: all ease 0.5s; }
+	.categoryContent{ widht: 90px; height:20px; font-weight:900; font-size:14px; letter-spacing:-2px; text-align:center; }
+	.middleRight{ width:525px;margin: -90px 0px 0px 158px; float: left; }
+	.serviceTitle{ width:1000px; height:50px; font-size:25px; font-weight:900; color:rgb(51,51,51); margin:0px 0px 0px 440px; letter-spacing:-2px; float: left; }
+	.serviceCenter{ width:1100px; margin:0px 0px 0px 440px; }
+	.service{ width:120px; height:170px; float:left; margin: 20px 200px 30px 22px; }
+	.service:hover{ cursor:pointer; }
+	.enterpriseImage{ height:210px; }
+	.enterprise{ height:30px; color:rgb(51,51,51); font-weight:900; font-size:18px; letter-spacing:-2px; }
+	.menuFont{ 			
+    	font-size: 16px;
+    	font-weight: bold;
+    	color: #777777;
+    	letter-spacing:-2px; 
+    	
+    }
+    .menuFont>img{ width:200px; height:65px; cursor:pointer; }
+    .menuBox-r{
+    	width:100px;
+    	height: 40px;
+    	font-size: 14px; 
+    	font-weight: bold; 
+    	color: #fff; 
+    	letter-spacing:-2px; 
+    	border:none;
+    	padding: 8px 20px;    
+    	border-radius: 4px;
+    	background-color: #00c7ae;
+    	margin: 13px;
+    	float:right;
+    }
+    .menuBox-l{
+    	width:100px;
+    	height: 40px;
+    	font-size: 14px; 
+    	font-weight: bold; 
+    	color: #777777; 
+    	letter-spacing:-2px; 
+    	border:none;
+    	padding: 8px 20px;    
+    	border-radius: 4px;
+    	border:none;
+    	background-color: #ffffff;
+    	margin-top: 13px;
+    	float:left;
+    }
+    input{
+    	font-size: 20px;
+    	font-weight: 700;
+    	width: 461px;
+    	padding: 20px;
+    	outline: none;
+    	float: left;
+    	border-radius: 10px;
+    	border: 2px solid #00c7ae;
+   		margin: 25px 0px 0px 8px;
+   		letter-spacing:-2px; 
+    }
+    .middleSearch button{
+    	width: 40px;
+    	height: 100%;
+    	outline: none;
+    	float: left;
+    	border:none;
+    	background:#ffffff;
+    	margin: 49px 0px 0px -45px;
+    }
+    @keyframes zoomIn {
+  		0% {
+   		opacity: 0;
+    	transform: scale3d(.3, .3, .3)
+    	}
+ 	    50% {
+    	opacity: 1
+ 	    }
+	}
+	.zoomIn {
+  		-webkit-animation-duration: 1s;
+  		animation-duration: 1s;
+  		-webkit-animation-fill-mode: both;
+  		animation-fill-mode: both;
+  		animation-name: zoomIn
+	}
+	.zoomIn>img:hover{ cursor:pointer; }
+	.middleLeft object {
+		height:480px;
+		width: 520px;	
+	}
+    button:hover {
+    	cursor: pointer;
+    }
+    .btn-1 {
+		background: #ffffff;
+		font-weight: 700;
+		font-size:15px;
+		-webkit-transition: all .15s linear;
+		transition: all .15s linear;
+		text-decoration: none;
+		color:#00c7ae;
+		float:right;
+	}
+	.btn-1:hover {
+		background: #ffffff;
+		font-weight: 900;
+		color:#00a9c7;
+	}
+    #slideshow { 
+    position: relative; 
+    width: 100%; 
+    height: 600px; 
+    padding: 10px; 
+	}
+
+	#slideshow > img { /* 에헤헤 */
+	    position: absolute; 
+	    width:450px;
+	}
+	
+	#slideshow > div { 
+	    position: absolute; 
+	}

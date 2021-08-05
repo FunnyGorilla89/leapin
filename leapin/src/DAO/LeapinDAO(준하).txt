@@ -1,0 +1,705 @@
+package DAO;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import DTO.Category_DTO;
+import DTO.Member_DTO;
+import DTO.Offer_DTO;
+import DTO.Request_DTO;
+
+public class LeapinDAO {
+	private ResultSet rs;	// 필드는 기본적으로 객체를 생성하면 NULL값이 들어간다.
+	private PreparedStatement pstmt;
+	private Connection conn;
+	private String sql;
+	
+	public LeapinDAO(){
+		String driver = "oracle.jdbc.driver.OracleDriver";
+		String url = "jdbc:oracle:thin:@localhost:1521:xe";
+		String id = "leapin";
+		String pw = "leapin1234";
+		try {
+			Class.forName(driver);
+			conn = DriverManager.getConnection(url,id,pw);
+		}
+		catch(ClassNotFoundException e) {
+			System.out.println("JDBC 로딩 실패");
+		}
+		catch(SQLException e) {
+			System.out.println("오라클 접속 실패");
+		}
+	}
+	
+	public int Sign_up(Member_DTO dto) {
+		int count = 0;
+		sql = "insert into member(id,pw,name,address,phone) values(?,?,?,?,?)";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getId());
+			pstmt.setString(2, dto.getPw());
+			pstmt.setString(3, dto.getName());
+			pstmt.setString(4, dto.getAddress());
+			pstmt.setString(5, dto.getPhone());
+			
+			pstmt.executeUpdate();
+			
+			count = pstmt.getUpdateCount();
+			
+			if(count == 1) {
+				System.out.println("회원가입이 완료되었습니다.");
+				return 1;
+			}
+			else {
+				System.out.println("정보를 다시 확인해주세요.");
+				return 0;
+			}
+			
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	public int login_chk(String id, String pw) {	// 로그인 아이디, 패스워드 한번에
+		int count = 0;
+		sql = "select count(*) from member where id = ? and pw = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.setString(2, pw);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt(1);
+				if(count == 1) {
+					System.out.println("로그인 성공");
+					return 0;
+				}
+				else {
+					System.out.println("아이디와 비밀번호를 다시 입력해주세요");
+					return 1;
+				}
+			}
+			/*else {
+				System.out.println("존재하지 않는 아이디입니다.");
+				return -1;
+			}*/
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	public String enterprise_Chk(String id) {
+		sql = "select e.id from member m, enterprise e where m.id = e.id and m.id=?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				System.out.println("기업회원입니다.");
+				return rs.getString(1);
+			}else{
+				System.out.println("일반회원입니다.");
+				return null;
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String getpw(String id) {
+		
+		sql = "select pw from member where id = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				return rs.getString(1);
+			}
+			else {
+				return null;
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return "오류";
+	}
+	
+	public int id_chk(String id) {
+
+		String sql = "select count(*) from member where id = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				if(rs.getInt(1) == 1) {
+					System.out.println("중복된 아이디입니다.");
+					return 0;
+				}
+				else {
+					System.out.println("사용 가능한 아이디입니다.");
+					return 1;
+				}
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	public int member_info_edit(String pw, String name, String address, String phone, String id) {
+		int count = 0;
+		sql="update member set pw=?, name=?, address=?, phone=? where id=?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pw);
+			pstmt.setString(2, name);
+			pstmt.setString(3, address);
+			pstmt.setString(4, phone);
+			pstmt.setString(5, id);
+			count = pstmt.executeUpdate();
+			if(count==1) {
+				System.out.println("수정완료");
+				return 1;
+			}else {
+				System.out.println("수정되지않았습니다.");
+				return 0;
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public int member_change(String id) {
+		sql = "delete from enterprise where id = ?";
+		try {
+			int count = 0;
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			count = pstmt.executeUpdate();
+			if(count>0) {
+				System.out.println("일반회원으로 전환되었습니다.");
+				return 1;
+			}else {
+				System.out.println("전환되지 않았습니다.");
+				return 0;
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public int enterprise_trans(String c_number, String name, String email, String id, String ceo_name, String tel, String address, String service_area, int cno, String content, String service_content, String file_name) {
+		sql = "insert into enterprise (c_number,name,email,id,ceo_name,tel,address,service_area,cno,content,service_content,file_name) "
+				+ "values (?,?,?,?,?,?,?,?,?,?,?,?)";
+		try {
+			int count = 0;
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, c_number);
+			pstmt.setString(2, name);
+			pstmt.setString(3, email);
+			pstmt.setString(4, id);
+			pstmt.setString(5, ceo_name);
+			pstmt.setString(6, tel);
+			pstmt.setString(7, address);
+			pstmt.setString(8, service_area);
+			pstmt.setInt(9, cno);
+			pstmt.setString(10, content);
+			pstmt.setString(11, service_content);
+			pstmt.setString(12, file_name);
+			count = pstmt.executeUpdate();
+			if(count>0) {
+				System.out.println("기업회원으로 전환되었습니다.");
+				return 1;
+			}else {
+				System.out.println("전환되지 않았습니다.");
+				return 0;
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public String receive_name(String id) {
+		sql = "select name from member where id = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				/* System.out.println(rs.getString(1) + "님 안녕하세요"); */
+				return rs.getString(1);
+			}
+			else {
+				/* System.out.println("아이디를 다시 입력해주세요."); */
+				return "로그인이 필요합니다.";
+
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return "-1";
+	}
+	
+	public String receive_phone(String id) {
+
+		sql = "select phone from member where id = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				/* System.out.println(rs.getString(1) + "님 안녕하세요"); */
+				return rs.getString(1);
+			}
+			else {
+				/* System.out.println("아이디를 다시 입력해주세요."); */
+				return "0";
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return "-1";
+	}
+	
+	public String receive_c_number(String id) {
+		sql = "select c_number from enterprise where id = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				/* System.out.println(rs.getString(1) + "님 안녕하세요"); */
+				return rs.getString("c_number");
+			}
+			else {
+				/* System.out.println("아이디를 다시 입력해주세요."); */
+				return "로그인이 필요합니다.";
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return "-1";
+	}
+	
+	public String receive_category_name(int cno) {
+		sql = "select name from category where cno = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cno);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				/* System.out.println(rs.getString(1) + "님 안녕하세요"); */
+				return rs.getString("name");
+			}
+			else {
+				/* System.out.println("아이디를 다시 입력해주세요."); */
+				return "잘못된 카테고리번호입니다.";
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String receive_enterprise_name(String id) {
+		sql = "select name from enterprise where id = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				/* System.out.println(rs.getString(1) + "님 안녕하세요"); */
+				return rs.getString(1);
+			}
+			else {
+				/* System.out.println("아이디를 다시 입력해주세요."); */
+				return "로그인이 필요합니다.";
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return "-1";
+	}
+	
+	public void get_category(ArrayList<Category_DTO> carray) {
+		sql = "select * from category";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				int cno = rs.getInt(1);
+				String c_name = rs.getString(2);
+				carray.add(new Category_DTO(cno,c_name));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void get_receive_request_info(ArrayList<Request_DTO> rarray, String id) {
+		sql = "select r.rno, r.request_id, r.offer_id, r.content, r.cno, r.date_time, r.state, r.hitcount, r.file_name, m.warning_cnt "
+				+ "from request r, enterprise e, member m, offer o "
+				+ "where r.offer_id=e.id and r.request_id = m.id and e.id=?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				int rno = rs.getInt(1);
+				String rid = rs.getString(2);
+				String oid = rs.getString(3);
+				String content = rs.getString(4);
+				int cno = rs.getInt(5);
+				String date_time = rs.getString(6);
+				String state = rs.getString(7);
+				/*
+				 * if(rs.getString(7).equals("0")) { state = "대기"; }else
+				 * if(rs.getString(7).equals("1")) { state = "진행중"; }
+				 */
+				int hitcount = rs.getInt(8);
+				String file_name = rs.getString(9);
+				
+				rarray.add(new Request_DTO(rno,rid,oid,content,cno,date_time,state,hitcount,file_name));
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void get_send_offer_info_to_receive_request(ArrayList<Offer_DTO> oarray, String id) {
+		sql = "select o.ono, o.rno, o.name, o.content, o.cno, o.date_time, o.state, o.file_name, o.price \r\n" + 
+				"from offer o, enterprise e ,request r \r\n" + 
+				"where r.rno = o.rno and o.name=e.id and r.offer_id=?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Offer_DTO od = new Offer_DTO();
+				od.setContent(rs.getString(4));
+				od.setFile_name(rs.getString(8));
+				od.setDate_time(rs.getString(6));
+				od.setPrice(rs.getString(9));
+//				int ono = rs.getInt(1);
+//				int rno2 = rs.getInt(2);
+//				String oname = rs.getString(3);
+//				String content = rs.getString(4);
+//				int cno = rs.getInt(5);
+//				String date_time = rs.getString(6);
+//				String state = rs.getString(7);
+//				String file_name = rs.getString(8);
+//				String price = rs.getString(9);
+				oarray.add(od);
+				//oarray.add(new Offer_DTO(ono,rno2,oname,content,cno,date_time,state,file_name,price));
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public int get_warning_cnt(String id) {
+		sql = "select warning_cnt from member where id = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				System.out.println("신고수 : " + rs.getInt(1));
+				return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return 0;
+	}
+	
+	public String enterprise_category_name(String id) {
+		sql="select c.cname from category c, enterprise e where c.cno = e.cno and e.id = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				System.out.println(rs.getString(1));
+				return rs.getString(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String get_member_request_name(String id) {
+		sql = "select m.name from request r, member m where r.request_id = m.id and r.request_id= ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.executeQuery();
+			if(rs.next()) {
+				System.out.println(rs.getString("m.name"));
+				return rs.getString("m.name");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String get_enterprise_request_name(String id) {
+		sql = "select e.name from request r, member m where r.request_id = e.id and r.request_id= ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.executeQuery();
+			if(rs.next()) {
+				System.out.println(rs.getString("e.name"));
+				return rs.getString("e.name");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public int get_cno_from_rno(int rno) {
+		sql="select cno from request where rno =?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, rno);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public boolean write_offer(int rno, String id, String content, String file_name, String price,int cno) {
+		sql = "insert into offer(ono,rno,name,content,cno,file_name,price) values (offer_seq.nextval,?,?,?,?,?,?)";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, rno);
+			pstmt.setString(2, id);
+			pstmt.setString(3, content);
+			pstmt.setInt(4, cno);
+			pstmt.setString(5, file_name);
+			pstmt.setString(6, price);
+			int count = pstmt.executeUpdate();
+			if(count > 0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				return false;
+	}
+	
+	public boolean delete_receive_request_from_list(int rno) {
+		sql="delete from request where rno = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, rno);
+			int count = pstmt.executeUpdate();
+			if(count>0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+	
+	public void update_request_state(int rno) {
+		sql = "update request set state = '진행중' where rno=?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, rno);
+			int count = pstmt.executeUpdate();
+			if(count>0) {
+				System.out.println("요청서상태값 변경완료");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("요청서상태값 변경실패");
+	}
+	
+	
+	public String receive_ceo_name(String id) {
+		sql = "select ceo_name from enterprise where id = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				/* System.out.println(rs.getString(1) + "님 안녕하세요"); */
+				return rs.getString(1);
+			}
+			else {
+				/* System.out.println("아이디를 다시 입력해주세요."); */
+				return "로그인이 필요합니다.";
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return "-1";
+	}
+	
+	public String receive_email(String id) {
+		sql = "select email from enterprise where id = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				/* System.out.println(rs.getString(1) + "님 안녕하세요"); */
+				return rs.getString(1);
+			}
+			else {
+				/* System.out.println("아이디를 다시 입력해주세요."); */
+				return "로그인이 필요합니다.";
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return "-1";
+	}
+	
+	public String receive_tel(String id) {
+		sql = "select tel from enterprise where id = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				/* System.out.println(rs.getString(1) + "님 안녕하세요"); */
+				return rs.getString("tell");
+			}
+			else {
+				/* System.out.println("아이디를 다시 입력해주세요."); */
+				return "로그인이 필요합니다.";
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return "-1";
+	}
+	
+	public int boardwrite(String id, String title, String content) {
+		
+		sql = "insert into board(bno, title, content, writer) values(Bno_SEQ.nextval,?,?,?)";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, title);
+			pstmt.setString(2, content);
+			pstmt.setString(3, id);
+			
+			int count = pstmt.executeUpdate();
+			System.out.println(count);
+			return count;
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	public int boardcount() {
+
+		int count = 0;
+		
+		sql = "select count(*) from board";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+	
+	public int account_delete(String id) {
+		sql = "delete from member where id=?";
+		try {
+			int count = 0;
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			count = pstmt.executeUpdate();
+			if(count>0) {
+				return 1;
+			}else{
+				return 0;
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	public String get_m_name(String id) {
+		sql = "select m.name from member m, request r where m.id = r.request_id and r.request_id = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				return rs.getString(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "끝^^";
+	}
+}

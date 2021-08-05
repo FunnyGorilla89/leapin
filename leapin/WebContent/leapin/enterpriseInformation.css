@@ -1,0 +1,121 @@
+ @charset "UTF-8";
+	body{ width:1500px; overflow:auto; }
+	.bottom{ width:1500px; color:rgb(115,115,115); font-size:12px; text-align:center; border-top: 1px solid #e1e1e1;}
+	.top{ width:1500px; height:72px; border-bottom:1px solid #e1e1e1;}
+	.home{ width:1500px; height:auto; margin:50px 0px 0px 260px; }
+	.homeTop{ width:1000px; height: 203px; border-bottom:1px solid #e1e1e1;}
+	.homeTopEnterprise{ width:1000px; height: 170px; float:left; }
+	.homeTopMenu{ width:1000px; height:23px; font-size:16px; font-weight:500; letter-spacing: -2px;}
+	.homeIntroduce{ width:1000px; height:auto; font-size: 18px; letter-spacing: -2px; }
+	.introduceTop{ width:1000px; height:180px; font-weight:700; letter-spacing: -2px; }
+	.introduceContent{ width:1000px; height:80px; font-size:16px; font-weight:700; color:rgb(115,115,115); letter-spacing: -2px;}
+	.introduceMiddle{ width:1000px; height: auto; font-size: 18px; font-weight:700; letter-spacing: -2px;}
+	.middleTop{ width:1000px; height:270px;}
+	.middleBasic{ width:400px; height:270px; float:left;}
+	.middleAdd{ width:400px; height:270px; float:left;}
+	.middleOffer{ width:1000px; height:150px; }
+	.middleDetail{ width:1000px; height:auto; }
+	.detailContent{ width:700px; height:auto; font-size: 16px; font-weight:700; letter-spacing: -2px; color:rgb(115,115,115); }
+	.pictureTitle{ width:1000px; height:150px; }
+	.pictureImage{ width:1000px; height:auto; }
+	.detailImage{ width:160px; height:160px; float:left; }
+	.review{ width:1000px; height:auto; }
+	.reviewTop{ width:1000px; height:130px; border-bottom:1px solid #e1e1e1;}
+	.reviewCenter{ width:1000px; height:auto; }
+	.reviewTitle{ width:1000px; height:55px; font-size: 18px; font-weight:700; letter-spacing: -2px; margin-top: 25px;}
+	.reviewTopStarpoint{ width:1000px; height:55px; font-size:16px; font-weight:700; letter-spacing: -2px; }
+	.reviewTopPoint{ width:55px; height: 55px; font-size:30px; font-weight:700; letter-spacing:-2px; float:left;}
+	.reviewTopStar{ width:945px; font-size:16px; font-weight:700; letter-spacing:-1px; float:left; color:rgb(115,115,115); }
+	.reviewId{ width:60px; height:35px; font-size:16px; font-weight:700; letter-spacing:-2px; float:left; }
+	.reviewStarpoint{ width:85px; height:35px; float:left; letter-spacing: -6px;}
+	.reviewDate{ height:35px; font-size:14px; font-weight:500; letter-spacing:-1px; color:#e1e1e1; float:left; }
+	.reviewContent{ height:130px; font-size:16px; font-weight:700; letter-spacing:-2px; color:rgb(115,115,115);}
+	.reviewMore{ text-align:center; }
+	.enterpriseImage{ width:120px; height:120px; border-radius:10px; float:left; float:left; }
+	.title{ height:30px; font-size: 18px; font-weight:700; letter-spacing: -2px;}
+	.content{ height:30px; font-size: 14px; font-weight:700; color:rgb(115,115,115); letter-spacing: -2px;}
+	.starpoint{ height:30px; font-size:14px; font-weight:700;}
+	
+	.menuFont{ 			
+    	font-size: 16px;
+    	font-weight: bold;
+    	color: #fff;
+    	letter-spacing:-2px; 
+    }
+    .menuFont>img{ width:200px; height:65px; cursor:pointer; }
+    .menuBox{
+    	padding: 8px 20px;    
+    	border-radius: 4px;
+    	background-color: #00c7ae;
+    	margin: 13px;
+    	float:right;
+    	width:100px;
+    	height:40px; 
+    	font-size: 16px; 
+    	font-weight: bold; 
+    	color: #fff; 
+    	letter-spacing:-2px; 
+    	border:none;
+    }
+    .serviceBox{
+    	font-size: 18px;
+    	font-weight:700;
+    	padding: 8px 45px;    
+    	border-radius: 15px;
+    	border: 2px solid #e1e1e1;
+    	float:left;
+    	color:rgb(115,115,115);
+    }
+    .btn-1 {
+		background: #ffffff;
+		font-weight: 700;
+		-webkit-transition: all .15s linear;
+		transition: all .15s linear;
+		text-decoration: none;
+		color:#00c7ae;
+		float:right;
+	}
+	.btn-1:hover {
+		background: #ffffff;
+		font-weight: 900;
+		color:#00a9c7;
+	}
+    .btn-2 {
+		background: #ffffff;
+		font-weight: 900;
+		-webkit-transition: all .15s linear;
+		transition: all .15s linear;
+		text-decoration: none;
+		color:rgb(115,115,115);
+	}
+	.btn-2:hover {
+		background: #ffffff;
+		font-weight: 900;
+		color:rgb(51,51,51);
+	}
+	.btn-3 {
+		background: #ffffff;
+		font-weight: 700;
+		-webkit-transition: all .15s linear;
+		transition: all .15s linear;
+		text-decoration: none;
+		color:#00c7ae;
+		padding: 8px 45px;    
+    	border-radius: 15px;
+    	border: 2px solid #e1e1e1;
+    	
+	}
+	.btn-3:hover {
+		background: #ffffff;
+		font-weight: 900;
+		color:#00a9c7;
+		padding: 8px 45px;    
+    	border-radius: 15px;
+    	border: 2px solid #e1e1e1;
+	}
+	img:hover {
+    	cursor: pointer;
+    }
+     button:hover {
+    	cursor: pointer;
+    }
